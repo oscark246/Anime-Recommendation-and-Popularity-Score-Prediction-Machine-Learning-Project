@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anime Models</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Welcome to the Anime Models</h1>
+    <form action="/prediction" method="get">
+        <button type="submit">Prediction Model</button>
+    </form>
+    <form action="/recommendation" method="get">
+        <button type="submit">Recommendation Model</button>
+    </form>
+</body>
+</html>

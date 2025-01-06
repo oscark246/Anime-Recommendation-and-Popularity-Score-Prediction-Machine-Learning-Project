@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Result</title>
+</head>
+<body>
+    <h1>Prediction Result</h1>
+    {% if prediction %}
+        <p>The predicted popularity score is: {{ prediction }}</p>
+    {% else %}
+        <p>{{ message }}</p>
+    {% endif %}
+    <a href="/prediction">Go Back</a>
+</body>
+</html>

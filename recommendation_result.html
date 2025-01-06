@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recommendations</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Recommendations</h1>
+    {% if recommendations %}
+        <table border="1">
+            <tr>
+                <th>Title</th>
+                <th>Genres</th>
+                <th>Type</th>
+                <th>Source</th>
+                <th>Score</th>
+            </tr>
+            {% for anime in recommendations %}
+                <tr>
+                    <td>{{ anime['name'] }}</td>
+                    <td>{{ anime['genres'] }}</td>
+                    <td>{{ anime['type'] }}</td>
+                    <td>{{ anime['source'] }}</td>
+                    <td>{{ anime['score'] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>{{ message }}</p>
+    {% endif %}
+    <a href="/recommendation">Go Back</a>
+</body>
+</html>

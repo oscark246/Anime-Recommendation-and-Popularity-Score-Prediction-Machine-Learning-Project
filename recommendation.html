@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anime Recommendation Model</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        // JavaScript to toggle input fields based on user selection
+        function toggleInputs() {
+            const recommendationType = document.getElementById("recommendation_type").value;
+            document.getElementById("title-input").style.display = recommendationType === "title" ? "block" : "none";
+            document.getElementById("feature-inputs").style.display = recommendationType === "features" ? "block" : "none";
+        }
+
+        function fetchSuggestions() {
+            const query = document.getElementById("anime-title").value;
+
+            if (query.length < 1) {
+                document.getElementById("suggestions").innerHTML = ""; // Clear suggestions
+                return;
+            }
+
+            fetch(`/autocomplete?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const suggestions = data.map(title => `<li onclick="selectTitle('${title}')">${title}</li>`).join('');
+                    document.getElementById("suggestions").innerHTML = `<ul>${suggestions}</ul>`;
+                });
+        }
+
+        function selectTitle(title) {
+            document.getElementById("anime-title").value = title; // Set the input field
+            document.getElementById("suggestions").innerHTML = ""; // Clear suggestions
+        }
+    </script>
+</head>
+<body>
+    <h1>Anime Recommendation Model</h1>
+    <form action="/recommendation" method="post">
+        <!-- Recommendation Type -->
+        <h3>Select Recommendation Type:</h3>
+        <select id="recommendation_type" name="recommendation_type" onchange="toggleInputs()" required>
+            <option value="">Select Type</option>
+            <option value="title">Recommend Based on Title</option>
+            <option value="features">Recommend Based on Features</option>
+        </select><br><br>
+
+        <!-- Title Input -->
+        <div id="title-input" style="display: none;">
+            <h3>Enter Anime Title:</h3>
+            <input type="text" id="anime-title" name="anime_title" onkeyup="fetchSuggestions()" autocomplete="off">
+            <div id="suggestions" style="border: 1px solid #ccc; max-height: 150px; overflow-y: auto;"></div>
+        </div>
+
+
+        <!-- Feature Inputs -->
+        <div id="feature-inputs" style="display: none;">
+            <h3>Select Genres:</h3>
+            {% for genre in genres %}
+                <label>
+                    <input type="checkbox" name="genres" value="{{ genre }}"> {{ genre }}
+                </label><br>
+            {% endfor %}
+
+            <h3>Select Type:</h3>
+            <select name="type">
+                <option value="">Select Type</option>
+                {% for anime_type in types %}
+                    <option value="{{ anime_type }}">{{ anime_type }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <h3>Select Source:</h3>
+            <select name="source">
+                <option value="">Select Source</option>
+                {% for source in sources %}
+                    <option value="{{ source }}">{{ source }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <h3>Minimum Score (0-10):</h3>
+            <input type="text" name="score" placeholder="Enter minimum score"><br><br>
+        </div>
+
+        <button type="submit">Get Recommendations</button>
+    </form>
+</body>
+</html>
