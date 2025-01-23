@@ -3,14 +3,36 @@
 <head>
     <title>Anime Models</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Disable scrolling for this page */
+        body {
+            overflow: hidden;  /* Disables scrolling on this page */
+            height: 100%;      /* Ensures the page takes full height */
+            margin: 0;         /* Removes default margin */
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Anime Models</h1>
-    <form action="/prediction" method="get">
-        <button type="submit">Prediction Model</button>
-    </form>
-    <form action="/recommendation" method="get">
-        <button type="submit">Recommendation Model</button>
-    </form>
+    <h1>Anime Machine Learning Models</h1>
+    <div class="card-container">
+        <!-- Prediction Model Card -->
+        <form action="/prediction" method="get" style="display: inline;">
+            <button type="submit" class="card">
+                <span>
+                    <div class="content">Prediction Model</div>
+                </span>
+            </button>
+        </form>
+
+        <!-- Recommendation Model Card -->
+        <form action="/recommendation" method="get" style="display: inline;">
+            <button type="submit" class="card">
+                <span>
+                    <div class="content">Recommendation Model</div>
+                </span>
+            </button>
+        </form>
+
+    </div>
 </body>
 </html>

@@ -6,27 +6,37 @@
 </head>
 <body>
     <h1>Anime Popularity Predictor</h1>
-    <form action="/prediction" method="post">
-        <label for="genres">Genres (comma-separated):</label><br>
-        <input type="text" id="genres" name="genres"><br><br>
 
-        <label for="type">Type:</label><br>
-        <select id="type" name="type">
-            <option value="">Select Type</option>
-            {% for anime_type in types %}
+    <div class="form">
+        <form class= "form" action="/prediction" method="post" onsubmit="return validateForm()">
+            <label for="genres">Genres:</label><br>
+            <div id="genres-container">
+                {% for genre in genres %}
+                <label class="genre-label">
+                    <input type="checkbox" name="genres" value="{{ genre }}"> <span>{{ genre }}</span>
+                </label><br>
+                {% endfor %}
+            </div>
+
+            <label for="type">Type:</label><br>
+            <select id="type" name="type">
+                <option value="">Select Type</option>
+                {% for anime_type in types %}
                 <option value="{{ anime_type }}">{{ anime_type }}</option>
-            {% endfor %}
-        </select><br><br>
+                {% endfor %}
+            </select><br><br>
 
-        <label for="source">Source:</label><br>
-        <select id="source" name="source">
-            <option value="">Select Source</option>
-            {% for source in sources %}
+            <label for="source">Source:</label><br>
+            <select id="source" name="source">
+                <option value="">Select Source</option>
+                {% for source in sources %}
                 <option value="{{ source }}">{{ source }}</option>
-            {% endfor %}
-        </select><br><br>
+                {% endfor %}
+            </select><br><br>
 
-        <button type="submit">Predict</button>
-    </form>
+            <button type="submit" class="button">Predict</button>
+        </form>
+    </div>
+
 </body>
 </html>

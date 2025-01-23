@@ -3,31 +3,121 @@
 <head>
     <title>Recommendations</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+    p {
+    text-align: center;
+    background-image: linear-gradient(45deg, #ffbc00, #ff0058);
+    color: transparent;
+    background-clip: text;
+    }
+    </style>
 </head>
-<body>
-    <h1>Recommendations</h1>
-    {% if recommendations %}
-        <table border="1">
-            <tr>
-                <th>Title</th>
-                <th>Genres</th>
-                <th>Type</th>
-                <th>Source</th>
-                <th>Score</th>
-            </tr>
-            {% for anime in recommendations %}
-                <tr>
-                    <td>{{ anime['name'] }}</td>
-                    <td>{{ anime['genres'] }}</td>
-                    <td>{{ anime['type'] }}</td>
-                    <td>{{ anime['source'] }}</td>
-                    <td>{{ anime['score'] }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>{{ message }}</p>
-    {% endif %}
-    <a href="/recommendation">Go Back</a>
+<body id="result-page">
+    <div class="result">
+        <h1>Recommendations</h1>
+        {% if recommendations %}
+            <table border="1" id="recommendations-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Genres</th>
+                        <th>Type</th>
+                        <th>Source</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for anime in recommendations %}
+                        <tr>
+                            <td>{{ anime['name'] }}</td>
+                            <td>{{ anime['genres'] }}</td>
+                            <td>{{ anime['type'] }}</td>
+                            <td>{{ anime['source'] }}</td>
+                            <td>{{ anime['score'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination" id="pagination"></div>
+        {% else %}
+            <p>{{ message }}</p>
+        {% endif %}
+        <a href="/recommendation" class="button">Go Back</a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const rowsPerPage = 10; // Number of rows per page
+        const table = document.getElementById("recommendations-table");
+        const tbody = table.querySelector("tbody");
+        const rows = tbody.querySelectorAll("tr");
+        const pagination = document.getElementById("pagination");
+
+        // Function to render a page
+        function renderPage(page) {
+            // Hide all rows
+            rows.forEach((row, index) => {
+                row.style.display = (index >= (page - 1) * rowsPerPage && index < page * rowsPerPage) ? "" : "none";
+            });
+
+            // Update pagination buttons
+            renderPagination(page);
+        }
+
+        // Function to render pagination buttons
+        function renderPagination(currentPage) {
+            const totalPages = Math.ceil(rows.length / rowsPerPage);
+            const maxVisibleButtons = 5; // Number of buttons to show at once
+            const halfRange = Math.floor(maxVisibleButtons / 2);
+            pagination.innerHTML = ""; // Clear existing buttons
+
+            // Add the "First" button only if it's not in the visible range
+            if (currentPage > halfRange + 1) {
+                const firstButton = document.createElement("button");
+                firstButton.textContent = "1";
+                firstButton.addEventListener("click", () => renderPage(1));
+                pagination.appendChild(firstButton);
+
+                // Add "..." after the first button if there’s a gap
+                if (currentPage > halfRange + 2) {
+                    const dots = document.createElement("span");
+                    dots.textContent = "...";
+                    pagination.appendChild(dots);
+                }
+            }
+
+            // Add page buttons near the current page
+            const startPage = Math.max(1, currentPage - halfRange);
+            const endPage = Math.min(totalPages, currentPage + halfRange);
+
+            for (let i = startPage; i <= endPage; i++) {
+                const button = document.createElement("button");
+                button.textContent = i;
+                button.classList.toggle("disabled", i === currentPage);
+                button.disabled = i === currentPage;
+                button.addEventListener("click", () => renderPage(i));
+                pagination.appendChild(button);
+            }
+
+            // Add "..." before the last button if there’s a gap
+            if (currentPage < totalPages - halfRange - 1) {
+                const dots = document.createElement("span");
+                dots.textContent = "...";
+                pagination.appendChild(dots);
+            }
+
+            // Add the "Last" button only if it's not in the visible range
+            if (currentPage < totalPages - halfRange) {
+                const lastButton = document.createElement("button");
+                lastButton.textContent = totalPages;
+                lastButton.addEventListener("click", () => renderPage(totalPages));
+                pagination.appendChild(lastButton);
+            }
+        }
+
+        // Initialize the first page
+        renderPage(1);
+    });
+    </script>
 </body>
 </html>
